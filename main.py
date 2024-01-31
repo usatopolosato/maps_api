@@ -4,6 +4,7 @@ import sys
 import requests
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+from PyQt5.QtCore import Qt
 
 SCREEN_SIZE = WIDTH, HEIGHT = 650, 400
 SIZE_MAP = 650, 400
@@ -12,6 +13,7 @@ SIZE_MAP = 650, 400
 class RybSholMaps(QWidget):
     def __init__(self):
         super().__init__()
+        self.z = 12
         self.getImage()
         self.initUI()
 
@@ -19,7 +21,7 @@ class RybSholMaps(QWidget):
         map_server = "http://static-maps.yandex.ru/1.x/?"
         params = {
             'll': '37.530887,55.703118',
-            'z': '15',
+            'z': str(self.z),
             'size': ','.join(map(str, SIZE_MAP)),
             'l': 'map',
         }
@@ -43,8 +45,28 @@ class RybSholMaps(QWidget):
         self.pixmap = QPixmap(self.map_file)
         self.image = QLabel(self)
         self.image.move(0, 0)
-        self.image.resize(WIDTH, HEIGHT)
+        self.image.resize(*SIZE_MAP)
         self.image.setPixmap(self.pixmap)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_PageUp:
+            temp = self.z
+            self.z += 1
+            if not 0 <= self.z <= 21:
+                self.z = temp
+            self.getImage()
+            self.pixmap = QPixmap(self.map_file)
+            self.image.setPixmap(self.pixmap)
+            self.repaint()
+        if event.key() == Qt.Key_PageDown:
+            temp = self.z
+            self.z -= 1
+            if not 0 <= self.z <= 21:
+                self.z = temp
+            self.getImage()
+            self.pixmap = QPixmap(self.map_file)
+            self.image.setPixmap(self.pixmap)
+            self.repaint()
 
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
