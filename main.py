@@ -5,6 +5,7 @@ import requests
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 from PyQt5.QtCore import Qt
+import move
 
 SCREEN_SIZE = WIDTH, HEIGHT = 650, 400
 SIZE_MAP = 650, 400
@@ -14,13 +15,17 @@ class RybSholMaps(QWidget):
     def __init__(self):
         super().__init__()
         self.z = 12
+        self.lon = 37.530887
+        self.lat = 55.703118
+        self.ll = str(self.lon) + ',' + str(self.lat)
+        self.fi, self.se = move.move(self.ll)
         self.getImage()
         self.initUI()
 
     def getImage(self):
         map_server = "http://static-maps.yandex.ru/1.x/?"
         params = {
-            'll': '37.530887,55.703118',
+            'll': self.ll,
             'z': str(self.z),
             'size': ','.join(map(str, SIZE_MAP)),
             'l': 'map',
@@ -36,6 +41,7 @@ class RybSholMaps(QWidget):
         self.map_file = "map.png"
         with open(self.map_file, "wb") as file:
             file.write(response.content)
+        self.fi, self.se = move.move(self.ll)
 
     def initUI(self):
         self.setGeometry(100, 100, *SCREEN_SIZE)
@@ -63,6 +69,21 @@ class RybSholMaps(QWidget):
             self.z -= 1
             if not 0 <= self.z <= 21:
                 self.z = temp
+            self.getImage()
+            self.pixmap = QPixmap(self.map_file)
+            self.image.setPixmap(self.pixmap)
+            self.repaint()
+        if event.key() == Qt.Key_Up:
+            self.lat += self.fi
+        if event.key() == Qt.Key_Down:
+            self.lat -= self.fi
+        if event.key() == Qt.Key_Right:
+            self.lon += self.se
+        if event.key() == Qt.Key_Left:
+            self.lon -= self.se
+        keys = [Qt.Key_Down, Qt.Key_Left, Qt.Key_Up, Qt.Key_Right, Qt.Key_PageDown, Qt.Key_PageUp]
+        if event.key() in keys:
+            self.ll = str(self.lon) + ',' + str(self.lat)
             self.getImage()
             self.pixmap = QPixmap(self.map_file)
             self.image.setPixmap(self.pixmap)
