@@ -74,13 +74,13 @@ class RybSholMaps(QWidget):
             self.image.setPixmap(self.pixmap)
             self.repaint()
         if event.key() == Qt.Key_Up:
-            self.lat += self.fi
+            self.lat += 0.01
         if event.key() == Qt.Key_Down:
-            self.lat -= self.fi
+            self.lat -= 0.01
         if event.key() == Qt.Key_Right:
-            self.lon += self.se
+            self.lon += 0.01
         if event.key() == Qt.Key_Left:
-            self.lon -= self.se
+            self.lon -= 0.01
         keys = [Qt.Key_Down, Qt.Key_Left, Qt.Key_Up, Qt.Key_Right, Qt.Key_PageDown, Qt.Key_PageUp]
         if event.key() in keys:
             self.ll = str(self.lon) + ',' + str(self.lat)
