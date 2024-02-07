@@ -14,13 +14,22 @@ SIZE_MAP = 650, 400
 class RybSholMaps(QWidget):
     def __init__(self):
         super().__init__()
+        # uic.loadUi('data/first.ui', self)
         self.z = 12
         self.lon = 37.530887
         self.lat = 55.703118
         self.ll = str(self.lon) + ',' + str(self.lat)
         self.fi, self.se = move.move(self.ll)
+        self.map = 'map'
         self.getImage()
-        self.initUI()
+        self.pixmap = QPixmap(self.map_file)
+        self.image = QLabel(self)
+        self.image.move(0, 0)
+        self.image.resize(*SIZE_MAP)
+        self.image.setPixmap(self.pixmap)
+        self.map_btn.clicked.connect(self.select_map)
+        self.sputnic_btn.clicked.connect(self.select_map)
+        self.gibrid_btn.clicked.connect(self.select_map)
 
     def getImage(self):
         map_server = "http://static-maps.yandex.ru/1.x/?"
@@ -28,7 +37,7 @@ class RybSholMaps(QWidget):
             'll': self.ll,
             'z': str(self.z),
             'size': ','.join(map(str, SIZE_MAP)),
-            'l': 'map',
+            'l': self.map,
         }
         response = requests.get(map_server, params=params)
 
@@ -42,17 +51,6 @@ class RybSholMaps(QWidget):
         with open(self.map_file, "wb") as file:
             file.write(response.content)
         self.fi, self.se = move.move(self.ll)
-
-    def initUI(self):
-        self.setGeometry(100, 100, *SCREEN_SIZE)
-        self.setWindowTitle('Отображение карты')
-
-        ## Изображение
-        self.pixmap = QPixmap(self.map_file)
-        self.image = QLabel(self)
-        self.image.move(0, 0)
-        self.image.resize(*SIZE_MAP)
-        self.image.setPixmap(self.pixmap)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_PageUp:
@@ -74,13 +72,13 @@ class RybSholMaps(QWidget):
             self.image.setPixmap(self.pixmap)
             self.repaint()
         if event.key() == Qt.Key_Up:
-            self.lat += 0.01
+            self.lat += 0.01 * (21 - self.z)
         if event.key() == Qt.Key_Down:
-            self.lat -= 0.01
+            self.lat -= 0.01 * (21 - self.z)
         if event.key() == Qt.Key_Right:
-            self.lon += 0.01
+            self.lon += 0.01 * (21 - self.z)
         if event.key() == Qt.Key_Left:
-            self.lon -= 0.01
+            self.lon -= 0.01 * (21 - self.z)
         keys = [Qt.Key_Down, Qt.Key_Left, Qt.Key_Up, Qt.Key_Right, Qt.Key_PageDown, Qt.Key_PageUp]
         if event.key() in keys:
             self.ll = str(self.lon) + ',' + str(self.lat)
@@ -88,6 +86,14 @@ class RybSholMaps(QWidget):
             self.pixmap = QPixmap(self.map_file)
             self.image.setPixmap(self.pixmap)
             self.repaint()
+
+    def select_map(self):
+        if self.sender().text() == 'Карта':
+            self.map = 'map'
+        elif self.sender().text() == 'Спутник':
+            self.map = 'sat'
+        elif self.sender().text() == 'Гибрид':
+            self.map = 'skl'
 
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
