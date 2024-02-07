@@ -3,7 +3,8 @@ import sys
 
 import requests
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
 from PyQt5.QtCore import Qt
 import move
 
@@ -11,16 +12,17 @@ SCREEN_SIZE = WIDTH, HEIGHT = 650, 400
 SIZE_MAP = 650, 400
 
 
-class RybSholMaps(QWidget):
+class RybSholMaps(QMainWindow):
     def __init__(self):
         super().__init__()
-        # uic.loadUi('data/first.ui', self)
+        uic.loadUi('data/first.ui', self)
         self.z = 12
         self.lon = 37.530887
         self.lat = 55.703118
         self.ll = str(self.lon) + ',' + str(self.lat)
         self.fi, self.se = move.move(self.ll)
         self.map = 'map'
+        self.image.setFocus()
         self.getImage()
         self.pixmap = QPixmap(self.map_file)
         self.image = QLabel(self)
@@ -86,6 +88,7 @@ class RybSholMaps(QWidget):
             self.pixmap = QPixmap(self.map_file)
             self.image.setPixmap(self.pixmap)
             self.repaint()
+            self.image.setFocus()
 
     def select_map(self):
         if self.sender().text() == 'Карта':
@@ -94,6 +97,11 @@ class RybSholMaps(QWidget):
             self.map = 'sat'
         elif self.sender().text() == 'Гибрид':
             self.map = 'skl'
+        self.getImage()
+        self.pixmap = QPixmap(self.map_file)
+        self.image.setPixmap(self.pixmap)
+        self.repaint()
+        self.image.setFocus()
 
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
