@@ -39,6 +39,7 @@ class RybSholMaps(QMainWindow):
     def clear(self):
         self.dothis = False
         self.address.setPlainText('')
+        self.search.setText('')
         self.getImage()
         self.pixmap = QPixmap(self.map_file)
         self.image.setPixmap(self.pixmap)
