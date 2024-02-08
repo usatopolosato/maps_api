@@ -32,6 +32,7 @@ class RybSholMaps(QMainWindow):
         self.map_btn.clicked.connect(self.select_map)
         self.sputnic_btn.clicked.connect(self.select_map)
         self.gibrid_btn.clicked.connect(self.select_map)
+        self.poisk_btn.clicked.connect(self.poisk)
 
     def getImage(self):
         map_server = "http://static-maps.yandex.ru/1.x/?"
@@ -102,6 +103,32 @@ class RybSholMaps(QMainWindow):
         self.image.setPixmap(self.pixmap)
         self.repaint()
         self.image.setFocus()
+
+    def poisk(self):
+        try:
+            town = self.stroka.text()
+            print(town)
+            geocoder_request = f"http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-" \
+                               f"98ba-98533de7710b&" \
+                               f"geocode={town}&format=json"
+
+            response = requests.get(geocoder_request)
+            if response:
+                json_response = response.json()
+                tp = json_response['response']['GeoObjectCollection']['featureMember'][0]['GeoObject'][
+                    'Point'][
+                    'pos'].split()
+                print(tp)
+                self.lon = float(tp[0])
+                self.lat = float(tp[1])
+                self.ll = str(self.lon) + ',' + str(self.lat)
+                self.getImage()
+                self.pixmap = QPixmap(self.map_file)
+                self.image.setPixmap(self.pixmap)
+                self.repaint()
+                self.image.setFocus()
+        except BaseException:
+            pass
 
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
