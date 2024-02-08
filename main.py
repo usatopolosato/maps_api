@@ -34,16 +34,23 @@ class RybSholMaps(QMainWindow):
         self.sputnic_btn.clicked.connect(self.select_map)
         self.search_btn.clicked.connect(self.run)
         self.gibrid_btn.clicked.connect(self.select_map)
-        # self.clear_btn.clicked.connect(self.clear)
+        self.clear_btn.clicked.connect(self.clear)
 
     def clear(self):
-        self.pt = 0
-    def getImage(self, pt=0):
+        self.dothis = False
+        self.address.setPlainText('')
+        self.getImage()
+        self.pixmap = QPixmap(self.map_file)
+        self.image.setPixmap(self.pixmap)
+        self.repaint()
+        self.image.setFocus()
+
+    def getImage(self):
         map_server = "http://static-maps.yandex.ru/1.x/?"
-        if pt:
+        if self.dothis:
             params = {
                 'll': self.ll,
-                'pt': pt,
+                'pt': self.pt,
                 'z': str(self.z),
                 'size': ','.join(map(str, SIZE_MAP)),
                 'l': self.map,
@@ -120,10 +127,12 @@ class RybSholMaps(QMainWindow):
         try:
             ll = search_coord(self.search.text())
             if ll:
-                self.lon, self.lat = map(float, ll.split())
+                self.lon, self.lat = map(float, ll[0].split())
                 self.ll = str(self.lon) + ',' + str(self.lat)
                 self.pt = self.ll + ',vkbkm'
-                self.getImage(self.pt)
+                self.address.setPlainText(ll[1])
+                self.dothis = True
+                self.getImage()
                 self.pixmap = QPixmap(self.map_file)
                 self.image.setPixmap(self.pixmap)
                 self.repaint()

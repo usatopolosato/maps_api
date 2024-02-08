@@ -44,4 +44,4 @@ def search_coord(toponym_to_find):
     json_response = response.json()
     toponym = json_response["response"]["GeoObjectCollection"][
         "featureMember"][0]["GeoObject"]
-    return toponym["Point"]["pos"]
+    return toponym["Point"]["pos"], toponym['metaDataProperty']['GeocoderMetaData']['text']
