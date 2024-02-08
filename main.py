@@ -6,7 +6,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
 from PyQt5.QtCore import Qt
-import move
+from move import search_coord
 
 SCREEN_SIZE = WIDTH, HEIGHT = 650, 400
 SIZE_MAP = 650, 400
@@ -17,10 +17,11 @@ class RybSholMaps(QMainWindow):
         super().__init__()
         uic.loadUi('data/first.ui', self)
         self.z = 12
+        self.dothis = False
         self.lon = 37.530887
         self.lat = 55.703118
         self.ll = str(self.lon) + ',' + str(self.lat)
-        self.fi, self.se = move.move(self.ll)
+        self.pt = self.ll + ',vkbkm'
         self.map = 'map'
         self.image.setFocus()
         self.getImage()
@@ -31,19 +32,30 @@ class RybSholMaps(QMainWindow):
         self.image.setPixmap(self.pixmap)
         self.map_btn.clicked.connect(self.select_map)
         self.sputnic_btn.clicked.connect(self.select_map)
+        self.search_btn.clicked.connect(self.run)
         self.gibrid_btn.clicked.connect(self.select_map)
-        self.poisk_btn.clicked.connect(self.poisk)
+        # self.clear_btn.clicked.connect(self.clear)
 
-    def getImage(self):
+    def clear(self):
+        self.pt = 0
+    def getImage(self, pt=0):
         map_server = "http://static-maps.yandex.ru/1.x/?"
-        params = {
-            'll': self.ll,
-            'z': str(self.z),
-            'size': ','.join(map(str, SIZE_MAP)),
-            'l': self.map,
-        }
+        if pt:
+            params = {
+                'll': self.ll,
+                'pt': pt,
+                'z': str(self.z),
+                'size': ','.join(map(str, SIZE_MAP)),
+                'l': self.map,
+            }
+        else:
+            params = {
+                'll': self.ll,
+                'z': str(self.z),
+                'size': ','.join(map(str, SIZE_MAP)),
+                'l': self.map,
+            }
         response = requests.get(map_server, params=params)
-
         if not response:
             print("Ошибка выполнения запроса:")
             print("Http статус:", response.status_code, "(", response.reason, ")")
@@ -53,7 +65,6 @@ class RybSholMaps(QMainWindow):
         self.map_file = "map.png"
         with open(self.map_file, "wb") as file:
             file.write(response.content)
-        self.fi, self.se = move.move(self.ll)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_PageUp:
@@ -82,7 +93,8 @@ class RybSholMaps(QMainWindow):
             self.lon += 0.01 * (21 - self.z)
         if event.key() == Qt.Key_Left:
             self.lon -= 0.01 * (21 - self.z)
-        keys = [Qt.Key_Down, Qt.Key_Left, Qt.Key_Up, Qt.Key_Right, Qt.Key_PageDown, Qt.Key_PageUp]
+        keys = [Qt.Key_Down, Qt.Key_Left, Qt.Key_Up, Qt.Key_Right,
+                Qt.Key_PageDown, Qt.Key_PageUp]
         if event.key() in keys:
             self.ll = str(self.lon) + ',' + str(self.lat)
             self.getImage()
@@ -104,31 +116,20 @@ class RybSholMaps(QMainWindow):
         self.repaint()
         self.image.setFocus()
 
-    def poisk(self):
+    def run(self):
         try:
-            town = self.stroka.text()
-            print(town)
-            geocoder_request = f"http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-" \
-                               f"98ba-98533de7710b&" \
-                               f"geocode={town}&format=json"
-
-            response = requests.get(geocoder_request)
-            if response:
-                json_response = response.json()
-                tp = json_response['response']['GeoObjectCollection']['featureMember'][0]['GeoObject'][
-                    'Point'][
-                    'pos'].split()
-                print(tp)
-                self.lon = float(tp[0])
-                self.lat = float(tp[1])
+            ll = search_coord(self.search.text())
+            if ll:
+                self.lon, self.lat = map(float, ll.split())
                 self.ll = str(self.lon) + ',' + str(self.lat)
-                self.getImage()
+                self.pt = self.ll + ',vkbkm'
+                self.getImage(self.pt)
                 self.pixmap = QPixmap(self.map_file)
                 self.image.setPixmap(self.pixmap)
                 self.repaint()
                 self.image.setFocus()
-        except BaseException:
-            pass
+        except Exception:
+            ...
 
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
