@@ -32,13 +32,18 @@
      <rect>
       <x>750</x>
       <y>20</y>
-      <width>160</width>
-      <height>181</height>
+      <width>201</width>
+      <height>291</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QPushButton" name="map_btn">
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(8, 193, 38);</string>
        </property>
@@ -49,6 +54,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="sputnic_btn">
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(0, 132, 220);</string>
        </property>
@@ -59,6 +69,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="gibrid_btn">
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
        <property name="styleSheet">
         <string notr="true">
 background-color: rgb(255, 246, 121);</string>
@@ -70,30 +85,59 @@ background-color: rgb(255, 246, 121);</string>
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget">
+   <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>410</y>
-      <width>601</width>
-      <height>80</height>
+      <x>14</x>
+      <y>455</y>
+      <width>381</width>
+      <height>51</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLineEdit" name="stroka"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="poisk_btn">
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 0, 0);</string>
-       </property>
-       <property name="text">
-        <string>Искать!</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Введите адрес искомого объекта:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="search">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>461</y>
+      <width>331</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="placeholderText">
+     <string>Введите адрес</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="search_btn">
+    <property name="geometry">
+     <rect>
+      <x>752</x>
+      <y>460</y>
+      <width>191</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Искать</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
