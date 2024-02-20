@@ -27,6 +27,7 @@ def move(geocode):
         toponym["boundedBy"]['Envelope']['lowerCorner'].split()[1])
     return fi, se
 
+
 def search_coord(toponym_to_find):
     geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
 
@@ -45,3 +46,19 @@ def search_coord(toponym_to_find):
     toponym = json_response["response"]["GeoObjectCollection"][
         "featureMember"][0]["GeoObject"]
     return toponym["Point"]["pos"], toponym['metaDataProperty']['GeocoderMetaData']['text']
+
+
+def postal_index(town):
+    try:
+        geocoder_request = f"http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-" \
+                           f"98ba-98533de7710b&" \
+                           f"geocode={town}&format=json"
+
+        response = requests.get(geocoder_request)
+        json_response = response.json()
+        tp = json_response['response']['GeoObjectCollection']['featureMember'][0]['GeoObject'][
+                          'metaDataProperty'][
+                          'GeocoderMetaData']['Address']['postal_code']
+        return tp
+    except Exception as error:
+        return 'должно быть произошла какая-то ошибка.'

@@ -6,7 +6,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
 from PyQt5.QtCore import Qt
-from move import search_coord
+from move import search_coord, postal_index
 
 SCREEN_SIZE = WIDTH, HEIGHT = 650, 400
 SIZE_MAP = 650, 400
@@ -17,6 +17,7 @@ class RybSholMaps(QMainWindow):
         super().__init__()
         uic.loadUi('data/first.ui', self)
         self.z = 12
+        self.index = 0
         self.dothis = False
         self.lon = 37.530887
         self.lat = 55.703118
@@ -30,6 +31,8 @@ class RybSholMaps(QMainWindow):
         self.image.move(0, 0)
         self.image.resize(*SIZE_MAP)
         self.image.setPixmap(self.pixmap)
+        self.take_btn.clicked.connect(self.postal)
+        self.leave_btn.clicked.connect(self.postal)
         self.map_btn.clicked.connect(self.select_map)
         self.sputnic_btn.clicked.connect(self.select_map)
         self.search_btn.clicked.connect(self.run)
@@ -38,6 +41,7 @@ class RybSholMaps(QMainWindow):
 
     def clear(self):
         self.dothis = False
+        self.index = 0
         self.address.setPlainText('')
         self.search.setText('')
         self.getImage()
@@ -46,9 +50,28 @@ class RybSholMaps(QMainWindow):
         self.repaint()
         self.image.setFocus()
 
+    def postal(self):
+        if self.sender().text() == 'ДА':
+            self.index = 1
+        else:
+            self.index = 0
+        if self.dothis:
+            if self.index:
+                self.get_postal_code()
+            else:
+                self.address.setPlainText(self.p_address)
+
+    def get_postal_code(self):
+        self.address.setPlainText(self.p_address +
+                                  f'. Почтовый индекс: {postal_index(self.ll)}')
+
     def getImage(self):
         map_server = "http://static-maps.yandex.ru/1.x/?"
         if self.dothis:
+            if self.index:
+                self.get_postal_code()
+            else:
+                self.address.setPlainText(self.p_address)
             params = {
                 'll': self.ll,
                 'pt': self.pt,
@@ -131,6 +154,7 @@ class RybSholMaps(QMainWindow):
                 self.lon, self.lat = map(float, ll[0].split())
                 self.ll = str(self.lon) + ',' + str(self.lat)
                 self.pt = self.ll + ',vkbkm'
+                self.p_address = ll[1]
                 self.address.setPlainText(ll[1])
                 self.dothis = True
                 self.getImage()

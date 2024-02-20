@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>971</width>
+    <width>1124</width>
     <height>723</height>
    </rect>
   </property>
@@ -30,10 +30,10 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>20</y>
-      <width>201</width>
-      <height>291</height>
+      <x>670</x>
+      <y>10</y>
+      <width>451</width>
+      <height>361</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -41,7 +41,7 @@
       <widget class="QPushButton" name="map_btn">
        <property name="font">
         <font>
-         <pointsize>14</pointsize>
+         <pointsize>18</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -56,7 +56,7 @@
       <widget class="QPushButton" name="sputnic_btn">
        <property name="font">
         <font>
-         <pointsize>14</pointsize>
+         <pointsize>18</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -71,7 +71,7 @@
       <widget class="QPushButton" name="gibrid_btn">
        <property name="font">
         <font>
-         <pointsize>14</pointsize>
+         <pointsize>18</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -88,9 +88,9 @@ background-color: rgb(255, 246, 121);</string>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>14</x>
-      <y>455</y>
-      <width>381</width>
+      <x>0</x>
+      <y>465</y>
+      <width>361</width>
       <height>51</height>
      </rect>
     </property>
@@ -106,8 +106,8 @@ background-color: rgb(255, 246, 121);</string>
    <widget class="QLineEdit" name="search">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>461</y>
+      <x>370</x>
+      <y>470</y>
       <width>331</width>
       <height>41</height>
      </rect>
@@ -124,8 +124,8 @@ background-color: rgb(255, 246, 121);</string>
    <widget class="QPushButton" name="search_btn">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>460</y>
+      <x>720</x>
+      <y>470</y>
       <width>191</width>
       <height>41</height>
      </rect>
@@ -142,7 +142,7 @@ background-color: rgb(255, 246, 121);</string>
    <widget class="QPushButton" name="clear_btn">
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>500</x>
       <y>520</y>
       <width>411</width>
       <height>41</height>
@@ -178,14 +178,14 @@ background-color: rgb(255, 246, 121);</string>
    </widget>
    <widget class="QTextEdit" name="address">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>243</x>
       <y>596</y>
-      <width>681</width>
-      <height>71</height>
+      <width>671</width>
+      <height>91</height>
      </rect>
     </property>
     <property name="font">
@@ -194,13 +194,101 @@ background-color: rgb(255, 246, 121);</string>
      </font>
     </property>
    </widget>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>929</x>
+      <y>500</y>
+      <width>191</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame {
+background-color: #c5c9c7;
+color: white;
+}
+QRadioButton {
+color: white;
+}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>191</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Почтовый индекс</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="take_btn">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>71</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>ДА</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="leave_btn">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>70</y>
+       <width>71</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>НЕТ</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>971</width>
+     <width>1124</width>
      <height>26</height>
     </rect>
    </property>
