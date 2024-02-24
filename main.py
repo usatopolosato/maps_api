@@ -6,7 +6,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
 from PyQt5.QtCore import Qt
-from move import search_coord, postal_index
+from move import search_coord, postal_index, scale_m, get_address
 
 SCREEN_SIZE = WIDTH, HEIGHT = 650, 400
 SIZE_MAP = 650, 400
@@ -24,6 +24,7 @@ class RybSholMaps(QMainWindow):
         self.ll = str(self.lon) + ',' + str(self.lat)
         self.pt = self.ll + ',vkbkm'
         self.map = 'map'
+        self.fi, self.se = scale_m(self.ll)
         self.image.setFocus()
         self.getImage()
         self.pixmap = QPixmap(self.map_file)
@@ -164,6 +165,21 @@ class RybSholMaps(QMainWindow):
                 self.image.setFocus()
         except Exception:
             ...
+
+    def mousePressEvent(self, event):
+        coor = [int(x) for x in str(event.pos())[20:-1].split(",")]
+
+        if 0 <= coor[1] <= 400 and 0 <= coor[0] <= 650:
+            first = self.lat - 0.08 * (coor[1] - 200) / 400
+            second = self.lon + 0.218 * (coor[0] - 325) / 650
+            self.pt = f'{second},{first},vkbkm'
+            self.p_address = get_address(first, second)
+            self.dothis = True
+            self.getImage()
+            self.pixmap = QPixmap(self.map_file)
+            self.image.setPixmap(self.pixmap)
+            self.repaint()
+            self.image.setFocus()
 
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
