@@ -167,19 +167,20 @@ class RybSholMaps(QMainWindow):
             ...
 
     def mousePressEvent(self, event):
-        coor = [int(x) for x in str(event.pos())[20:-1].split(",")]
+        if event.button() == 1:
+            coor = [int(x) for x in str(event.pos())[20:-1].split(",")]
 
-        if 0 <= coor[1] <= 400 and 0 <= coor[0] <= 650:
-            first = self.lat - 0.08 * (coor[1] - 200) / 400
-            second = self.lon + 0.218 * (coor[0] - 325) / 650
-            self.pt = f'{second},{first},vkbkm'
-            self.p_address = get_address(first, second)
-            self.dothis = True
-            self.getImage()
-            self.pixmap = QPixmap(self.map_file)
-            self.image.setPixmap(self.pixmap)
-            self.repaint()
-            self.image.setFocus()
+            if 0 <= coor[1] <= 400 and 0 <= coor[0] <= 650:
+                first = self.lat - 0.08 * (coor[1] - 200) / 400
+                second = self.lon + 0.218 * (coor[0] - 325) / 650
+                self.pt = f'{second},{first},vkbkm'
+                self.p_address = get_address(first, second)
+                self.dothis = True
+                self.getImage()
+                self.pixmap = QPixmap(self.map_file)
+                self.image.setPixmap(self.pixmap)
+                self.repaint()
+                self.image.setFocus()
 
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
